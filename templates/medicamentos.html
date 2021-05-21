@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+    <head>
+        <meta charset="UTF-8">
+        <title>Medicamentos</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    </head>
+    <header class="col-auto p-4">
+        <b class="usuario"><img height="40" width="40" src="images/usuario.png"> {{user}}</b>
+        <b class="salir"><a href="{{user_logout}}"><img height="40" width="40" src="images/salir.png"></a></b>
+    </header>
+    <body>
+        </br>
+        <h1 class="titulo"><img height="40" width="40" src="images/farmacia.png"> {{farmacia.nombre}}: MEDICAMENTOS</h1>
+        <form class="posicionFormularioBotones" id="medicamentos" action="/anhadirMedicamentos" method="get">
+            <button class="botones" type="submit" id="anhadirMedicamentos" name="anhadirMedicamentos" value="Añadir medicamentos"><img height="40" width="40" src="images/add.png"></button>
+            <input type="hidden" id="anhadirMedicamentosFarmaciaActual" name="anhadirMedicamentosFarmaciaActual" value="{{farmacia.key.id()}}">
+        </form>
+        <form class="posicionFormularioBotones" id="medicamentoVolver" action="/farmacias" method="get">
+            <button class="botones" type="submit" id="volver" name="volver" value="Volver"><img height="40" width="40" src="images/volver.png"></button>
+        </form>
+        <div class="col-auto p-5">
+            <table class="table table-hover table-borderless">
+                <tr class="table-dark">
+                    <th class="tituloTablas">IMAGEN</th>
+                    <th class="tituloTablas">NOMBRE</th>
+                    <th class="tituloTablas">DESCRIPCIÓN</th>
+                    <th class="tituloTablas">LABORATORIO</th>
+                    <th class="tituloTablas">PROVEEDOR</th>
+                    <th class="tituloTablas">CANTIDAD</th>
+                    <th class="tituloTablas">FECHA DE CADUCIDAD</th>
+                    <th class="tituloTablas">TIPO DE MEDICAMENTO</th>
+                </tr>
+                {% if medicamentos != None %}
+                    {% for medicamento in medicamentos %}
+                        <tr>
+                            <td class="columnasTabla">
+                                {% if medicamento.image_bin !=None %}
+                                    <img src="data:image/>jpg;png;svg;base64,{{medicamento.image_bin.encode('base64')}}">
+                                {% else %}
+                                    <img src="images/noExiste.png">
+                                {% endif %}
+                            </td>
+                            <td class="columnasTabla">{{medicamento.nombre}}</td>
+                            <td class="columnasTabla">{{medicamento.descripcion}}</td>
+                            <td class="columnasTabla">{{medicamento.laboratorio}}</td>
+                            <td class="columnasTabla">{{medicamento.proveedor}}</td>
+                            <td class="columnasTabla">{{medicamento.cantidad}}</td>
+                            <td class="columnasTabla">{{medicamento.fechaCaducidad}}</td>
+                            <td class="columnasTabla">{{(medicamento.tipoMedicamento)}}</td>
+                            <td class="columnaBotones">
+                                <form class="posicionFormularioBotones" id="medicamentoEditar" action="/editarMedicamentos" method="get">
+                                    <button class="botones" type="submit" id="editarMedicamento" name="editarMedicamento" value="Editar medicamento"><img height="40" width="40" src="images/editar.png"></button>
+                                    <input type="hidden" id="editarMedicamentosFarmaciaActual" name="editarMedicamentosFarmaciaActual" value="{{farmacia.key.id()}}">
+                                    <input type="hidden" id="nombreMedicamentoActual" name="nombreMedicamentoActual" value="{{medicamento.nombre}}">
+                                </form>
+                                <form class="posicionFormularioBotones" id="medicamentoEliminar" action="/eliminarMedicamentos" method="post">
+                                    <button class="botones" type="submit" id="eliminarMedicamento" name="eliminarMedicamento" value="Eliminar medicamento"><img height="40" width="40" src="images/eliminar.png"></button>
+                                    <input type="hidden" id="eliminarMedicamentosFarmaciaActual" name="eliminarMedicamentosFarmaciaActual" value="{{farmacia.key.id()}}">
+                                    <input type="hidden" id="nombreMedicamento" name="nombreMedicamento" value="{{medicamento.nombre}}">
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </table>
+        </div>
+        </br>
+    </body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Añadir medicamentos</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+        <script>
+            const tiposMedicamentos = [
+                "ANALGESICO",
+                "ANTIACIDO",
+                "ANTIULCEROSO",
+                "ANTIALERGICO",
+                "ANTIDIARREICO",
+                "LAXANTE",
+                "ANTIINFLAMATORIO",
+                "ANTIINFECCIOSO",
+                "ANTIPIRETICO",
+                "ANTITUSIVO",
+                "MUCOLITICO"
+            ];
+
+            //oculta el mensaje de error de validacion
+            function hideError() {
+                  var error = document.getElementById( "error" );
+                  error.innerHTML = "";
+                  error.style.display = "none";
+            }
+            //muestra el mensaje de error de validacion
+            function showError(msg) {
+                  var error = document.getElementById( "error" );
+                  error.innerHTML = "ERROR: " + msg;
+                  error.style.display = "block";
+            }
+            //hace las comprobaciones para la validacion
+            function validate() {
+                const contador = document.getElementsByClassName("contador");
+                let toret = true;
+                let error = false;
+                let i = 1;
+                const medicamentos = document.getElementById("medicamentosInput");
+
+                hideError();
+
+                while (error===false && i <= contador.length) {
+                    let nombre = medicamentos["nombre" + i.toString()].value.trim();
+                    let descripcion = medicamentos["descripcion" + i.toString()].value.trim();
+                    let laboratorio = medicamentos["laboratorio" + i.toString()].value.trim();
+                    let proveedor = medicamentos["proveedor" + i.toString()].value.trim();
+                    let cantidad = medicamentos["cantidad" + i.toString()].value.trim();
+                    let fechaCaducidad = medicamentos["fechaCaducidad" + i.toString()].value.trim();
+                    let tipoMedicamento = medicamentos["tipoMedicamento" + i.toString()].value.trim();
+
+                    if (nombre.length > 30 || nombre.length === 0 || nombre === "" || nombre === "  " || nombre === "\n"
+                        || descripcion.length > 120 || descripcion.length === 0 || descripcion === "" || descripcion === "  " || descripcion === "\n"
+                        || laboratorio.length > 30 || laboratorio.length === 0 || laboratorio === "" || laboratorio === "  " || laboratorio === "\n"
+                        || proveedor.length > 30 || proveedor.length === 0 || proveedor === "" || proveedor === "  " || proveedor === "\n"){
+                        error =true;
+                    }
+                    if (!error) {
+                        if (!tiposMedicamentos.includes(tipoMedicamento)) {
+                            error = true;
+                        }
+                    }
+
+                    if (!error){
+                        try {
+                            const cant = parseInt(cantidad);
+                            if (cant < 1 || cant > 1000){
+                                error = true;
+                            }
+                        }catch (e){
+                            error = true;
+                        }
+                    }
+                    if (!error){
+                        if (new Date(fechaCaducidad) < new Date("2021-07-15")){
+                                error = true;
+                        }
+                    }
+                    i++;
+                }
+
+                if(error===true) {
+                    toret = false;
+                    showError("Es obligatorio cubrir todos los campos del formulario excepto la imagen");
+                }
+
+                return toret;
+            }
+
+            //crea mas formularios para añadir medicamentos
+            function createMoreInputs() {
+
+                const medicamento = document.getElementById("medicamentos");
+                const num = document.createElement("h3");
+                const nombre = document.createElement("input");
+                const descripcion = document.createElement("input");
+                const laboratorio = document.createElement("input");
+                const proveedor = document.createElement("input");
+                const cantidad = document.createElement("input");
+                const fechaCaducidad = document.createElement("input");
+                const tipoMedicamento = document.createElement("select");
+                const img = document.createElement("input");
+                const nombreLabel = document.createElement("label");
+                const descripcionLabel = document.createElement("label");
+                const laboratorioLabel = document.createElement("label");
+                const proveedorLabel = document.createElement("label");
+                const cantidadLabel = document.createElement("label");
+                const fechaCaducidadLabel = document.createElement("label");
+                const tipoMedicamentoLabel = document.createElement("label");
+                const imgLabel = document.createElement("label");
+                const contador = document.getElementsByClassName("contador");
+
+                nombreLabel.innerHTML = "Nombre ";
+                nombreLabel.className = "col-sm-2 col-form-label";
+                nombre.name = nombre.id = "nombre" + (contador.length+1);
+                nombre.placeholder = "Inserte aquí el nombre";
+                nombre.size = 30;
+                nombre.type = "text";
+                nombre.required = true;
+
+                descripcionLabel.innerHTML = "Descripción ";
+                descripcionLabel.className = "col-sm-2 col-form-label";
+                descripcion.name =  descripcion.id = "descripcion" + (contador.length+1);
+                descripcion.size =80;
+                descripcion.placeholder = "Inserte aquí la descripción";
+                descripcion.type = "text";
+                descripcion.required = true;
+
+                laboratorioLabel.innerHTML = "Laboratorio ";
+                laboratorioLabel.className = "col-sm-2 col-form-label";
+                laboratorio.name =  laboratorio.id = "laboratorio" + (contador.length+1);
+                laboratorio.size = 30;
+                laboratorio.placeholder = "Inserte aquí el laboratorio";
+                laboratorio.type = "text";
+                laboratorio.required = true;
+
+                proveedorLabel.innerHTML = "Proveedor ";
+                proveedorLabel.className = "col-sm-2 col-form-label";
+                proveedor.name =  proveedor.id = "proveedor" + (contador.length+1);
+                proveedor.size = 30;
+                proveedor.placeholder = "Inserte aquí el proveedor";
+                proveedor.type = "text";
+                proveedor.required = true;
+
+                cantidadLabel.innerHTML = "Cantidad ";
+                cantidadLabel.className = "col-sm-2 col-form-label";
+                cantidad.name =  cantidad.id = "cantidad" + (contador.length+1);
+                cantidad.max = "1000";
+                cantidad.min = "1";
+                cantidad.placeholder = "Inserte aquí la cantidad";
+                cantidad.type = "number";
+                cantidad.required = true;
+
+                fechaCaducidadLabel.innerHTML = "Fecha de caducidad ";
+                fechaCaducidadLabel.className = "col-sm-2 col-form-label";
+                fechaCaducidad.name =  fechaCaducidad.id = "fechaCaducidad" + (contador.length+1);
+                fechaCaducidad.min =  "2021-07-15";
+                fechaCaducidad.placeholder = "Inserte aquí la fecha de caducidad";
+                fechaCaducidad.type = "date";
+                fechaCaducidad.required = true;
+
+                tipoMedicamentoLabel.innerHTML = "Tipo de medicamento ";
+                tipoMedicamentoLabel.className = "col-sm-2 col-form-label";
+                tipoMedicamento.name =  tipoMedicamento.id = "tipoMedicamento" + (contador.length+1);
+                tipoMedicamento.placeholder = "Seleccione el tipo de medicamento";
+
+                for (let i=0; i<tiposMedicamentos.length; i++){
+                    opcion = document.createElement("option");
+                    opcion.value = tiposMedicamentos[i];
+                    opcion.text = tiposMedicamentos[i];
+                    tipoMedicamento.appendChild(opcion);
+                }
+                tipoMedicamento.required = true;
+
+                imgLabel.innerHTML = "Imagen ";
+                imgLabel.className = "col-sm-2 col-form-label";
+                img.name = img.id = "img" + (contador.length+1);
+                img.size = 90;
+                img.placeholder = "Inserte aquí la imagen";
+                img.type = "file";
+
+                num.name = num.id = "num" + (contador.length+1);
+                num.innerHTML = "------------------------------------------------------------------------------------------";
+                num.className = "contador";
+
+                medicamento.appendChild(num);
+                medicamento.appendChild(document.createElement("br"));
+
+                medicamento.appendChild(nombreLabel);
+                medicamento.appendChild(nombre);
+                medicamento.appendChild(document.createElement("br"));
+                medicamento.appendChild(document.createElement("br"));
+
+                medicamento.appendChild(descripcionLabel);
+                medicamento.appendChild(descripcion);
+                medicamento.appendChild(document.createElement("br"));
+                medicamento.appendChild(document.createElement("br"));
+
+                medicamento.appendChild(laboratorioLabel);
+                medicamento.appendChild(laboratorio);
+                medicamento.appendChild(document.createElement("br"));
+                medicamento.appendChild(document.createElement("br"));
+
+                medicamento.appendChild(proveedorLabel);
+                medicamento.appendChild(proveedor);
+                medicamento.appendChild(document.createElement("br"));
+                medicamento.appendChild(document.createElement("br"));
+
+                medicamento.appendChild(cantidadLabel);
+                medicamento.appendChild(cantidad);
+                medicamento.appendChild(document.createElement("br"));
+                medicamento.appendChild(document.createElement("br"));
+
+                medicamento.appendChild(fechaCaducidadLabel);
+                medicamento.appendChild(fechaCaducidad);
+                medicamento.appendChild(document.createElement("br"));
+                medicamento.appendChild(document.createElement("br"));
+
+                medicamento.appendChild(tipoMedicamentoLabel);
+                medicamento.appendChild(tipoMedicamento);
+                medicamento.appendChild(document.createElement("br"));
+                medicamento.appendChild(document.createElement("br"));
+
+                medicamento.appendChild(imgLabel);
+                medicamento.appendChild(img);
+                medicamento.appendChild(document.createElement("br"));
+                medicamento.appendChild(document.createElement("br"));
+            }
+        </script>
+    </head>
+    <header class="col-auto p-4">
+            <b class="usuario"><img height="40" width="40" src="images/usuario.png"> {{user}}</b>
+            <b class="salir"><a href="{{user_logout}}"><img height="40" width="40" src="images/salir.png"></a></b>
+    </header>
+    <body>
+        <h1 class="titulo"><img height="40" width="40" src="images/farmacia.png"> {{farmacia.nombre}}: NUEVOS MEDICAMENTOS</h1>
+        <form class="posicionFormularioBotones" id="volverInput" action="/anhadirMedicamentos"  method="post">
+            <button class="botones" type="submit" id="volver" name="volver" value="Volver"><img height="40" width="40" src="images/volver.png"></button>
+            <input type="hidden" id="medicamentoFarmaciaActualVolver" name="medicamentoFarmaciaActualVolver" value="{{farmacia.key.id()}}">
+        </form>
+        <div class="col-auto p-5">
+            <form id="medicamentosInput" action="/anhadirMedicamentos" onSubmit="return validate();" method="post" enctype="multipart/form-data">
+                <div id="medicamentos">
+                    <h3 id="num1" name="num1" class="contador"></h3>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Nombre</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="nombre1" name="nombre1" size="30" placeholder="Inserte aquí el nombre" required/></br></br>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Descripción</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="descripcion1" name="descripcion1" size="80" placeholder="Inserte aquí la descripción" required/></br></br>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Laboratorio</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="laboratorio1" name="laboratorio1" size="30" placeholder="Inserte aquí el laboratorio" required/></br></br>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Proveedor</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="proveedor1" name="proveedor1" size="30" placeholder="Inserte aquí el proveedor" required/></br></br>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Cantidad</label>
+                        <div class="col-sm-10">
+                            <input type="number" id="cantidad1" name="cantidad1" min="1" max="1000" placeholder="Inserte aquí la cantidad" required/></br></br>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Fecha de caducidad</label>
+                        <div class="col-sm-10">
+                            <input type="date" id="fechaCaducidad1" name="fechaCaducidad1" min="2021-07-15" placeholder="Seleccione aquí la fecha de caducidad" required/></br></br>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Tipo de medicamento</label>
+                        <div class="col-sm-10">
+                            <select name="tipoMedicamento1" id="tipoMedicamento1" required>
+                                {% for tipoMedicamento in tiposMedicamentos %}
+                                    <option value="{{tipoMedicamento}}">{{tipoMedicamento}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    </br></br>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Imagen</label>
+                        <div class="col-sm-10">
+                            <input type="file" id="img1" name="img1" size="90" placeholder="Inserte aquí la imagen"/></br></br>
+                        </div>
+                    </div>
+                </div>
+                <button class="botones" type="button" onclick="createMoreInputs();" value="Añadir más medicamentos"><img height="40" width="40" src="images/add.png"></button>
+                <button class="botones" type="submit" id="enviar" name="enviar" value="Guardar"><img height="40" width="40" src="images/guardar.png"></button>
+                <input type="hidden" id="medicamentoFarmaciaActual" name="medicamentoFarmaciaActual" value="{{farmacia.key.id()}}">
+            </form>
+        </div>
+        <div id="error" style="color:white;background-color:red;display:none"></div>
+    </body>
+</html>

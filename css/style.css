@@ -1,0 +1,41 @@
+.posicionFormularioBotones{
+  display: inline;
+  border-color: transparent;
+}
+
+.botones {
+  border: none;
+  background-color: transparent;
+}
+
+.tituloTablas {
+  text-align: center;
+  font-family: "Roboto", "Lucida Grande", "DejaVu Sans", "Bitstream Vera Sans", Verdana, Arial, sans-serif;
+}
+
+.columnasTabla {
+  text-align: center;
+  font-family: "Roboto", "Lucida Grande", "DejaVu Sans", "Bitstream Vera Sans", Verdana, Arial, sans-serif;
+}
+
+.contenedorTabla {
+  align-self: center;
+}
+
+.titulo {
+  font-family: "Roboto", "Lucida Grande", "DejaVu Sans", "Bitstream Vera Sans", Verdana, Arial, sans-serif;
+  display: inline;
+  margin-left: 10%;
+  margin-right: 2%;
+}
+
+.salir{
+  display: inline;
+  margin-left: 2%;
+}
+
+.usuario {
+  display: inline;
+  font-family: "Roboto", "Lucida Grande", "DejaVu Sans", "Bitstream Vera Sans", Verdana, Arial, sans-serif;
+  color: gray;
+}

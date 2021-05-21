@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Farmacias</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    </head>
+    <header class="col-auto p-4">
+        <b class="usuario"><img height="40" width="40" src="images/usuario.png"> {{user}}</b>
+        <b class="salir"><a href="{{user_logout}}"><img height="40" width="40" src="images/salir.png"></a></b>
+    </header>
+    <body>
+        </br>
+        <h1 class="titulo">FARMACIAS</h1>
+        <form class="posicionFormularioBotones" id="farmacias" action="/anhadirFarmacias" method="get" enctype="multipart/form-data">
+            <button class="botones" type="submit" id="anhadirFarmacias" class="anhadirFarmacias" name="anhadirFarmacias" value="Añadir farmacias"><img height="40" width="40" src="images/add.png"></button>
+        </form>
+        <div class="col-auto p-5">
+            <table class="table table-hover table-borderless">
+                <tr class="table-dark">
+                    <th class="tituloTablas">IMAGEN</th>
+                    <th class="tituloTablas">NOMBRE</th>
+                    <th class="tituloTablas">DIRECCIÓN</th>
+                </tr>
+                {% if farmacias != None %}
+                    {% for farmacia in farmacias %}
+                        <tr>
+                            <td class="columnasTabla">
+                                {% if farmacia.image_bin !=None %}
+                                    <img  src="data:image/>jpg;png;svg;base64,{{farmacia.image_bin.encode('base64')}}">
+                                {% else %}
+                                    <img  src="images/noExiste.png">
+                                {% endif %}
+                            </td>
+                            <td class="columnasTabla">{{farmacia.nombre}}</td>
+                            <td class="columnasTabla">{{farmacia.direccion}}</td>
+                            <td class="columnaBotones">
+                                <form class="posicionFormularioBotones" id="farmacia" action="/medicamentos" method="get">
+                                    <button class="botones" type="submit" id="medicamentosFarmacia" name="medicamentosFarmacia" value="Ver medicamentos"><img height="40" width="40" src="images/medicamento.png"></button>
+                                    <input type="hidden" id="medicamentoFarmaciaActual" name="medicamentoFarmaciaActual" value="{{farmacia.key.id()}}">
+                                </form>
+                                <form class="posicionFormularioBotones" id="farmaciaEditar" action="/editarFarmacias" method="get">
+                                    <button class="botones" type="submit" id="editarFarmacia" name="editarFarmacia" value="Editar farmacia"><img height="40" width="40" src="images/editar.png"></button>
+                                    <input type="hidden" id="editarFarmaciaActual" name="editarFarmaciaActual" value="{{farmacia.key.id()}}">
+                                    <input type="hidden" id="nombreFarmacia" name="nombreFarmacia" value="{{farmacia.nombre}}">
+                                </form>
+                                <form class="posicionFormularioBotones" id="farmaciaEliminar" action="/eliminarFarmacias" method="post">
+                                    <button class="botones" type="submit" id="eliminarFarmacia" name="eliminarFarmacia" value="Eliminar farmacia"><img height="40" width="40" src="images/eliminar.png"></button>
+                                    <input type="hidden" id="eliminarFarmaciaActual" name="eliminarFarmaciaActual" value="{{farmacia.key.id()}}">
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </table>
+        </div>
+        </br>
+    </body>
+</html>

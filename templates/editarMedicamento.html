@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+    <head>
+        <meta charset="UTF-8">
+        <title>Editar medicamento</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+        <script>
+            const tiposMedicamentos = [
+                "ANALGESICO",
+                "ANTIACIDO",
+                "ANTIULCEROSO",
+                "ANTIALERGICO",
+                "ANTIDIARREICO",
+                "LAXANTE",
+                "ANTIINFLAMATORIO",
+                "ANTIINFECCIOSO",
+                "ANTIPIRETICO",
+                "ANTITUSIVO",
+                "MUCOLITICO"
+            ];
+
+            //oculta el mensaje de error de validaicones
+            function hideError() {
+                var error = document.getElementById( "error" );
+                error.innerHTML = "";
+                error.style.display = "none";
+            }
+            //muestra el mensaje de error de validacion
+            function showError(msg) {
+                  var error = document.getElementById( "error" );
+                  error.innerHTML = "ERROR: " + msg;
+                  error.style.display = "block";
+            }
+            //hace las comprobaciones de validacion
+            function validate() {
+                let toret = true;
+                let error = false;
+                const medicamentos = document.getElementById("medicamentosEdit");
+
+                hideError();
+
+                let nombre = medicamentos["nombre"].value.trim();
+                let descripcion = medicamentos["descripcion"].value.trim();
+                let laboratorio = medicamentos["laboratorio"].value.trim();
+                let proveedor = medicamentos["proveedor"].value.trim();
+                let cantidad = medicamentos["cantidad"].value.trim();
+                let fechaCaducidad = medicamentos["fechaCaducidad"].value.trim();
+                let tipoMedicamento = medicamentos["tipoMedicamento"].value.trim();
+
+                if (nombre.length > 30 || nombre.length === 0 || nombre === "" || nombre === "  " || nombre === "\n"
+                    || descripcion.length > 120 || descripcion.length === 0 || descripcion === "" || descripcion === "  " || descripcion === "\n"
+                    || laboratorio.length > 30 || laboratorio.length === 0 || laboratorio === "" || laboratorio === "  " || laboratorio === "\n"
+                    || proveedor.length > 30 || proveedor.length === 0 || proveedor === "" || proveedor === "  " || proveedor === "\n"){
+                    error =true;
+                }
+                if (!error) {
+                    if (!tiposMedicamentos.includes(tipoMedicamento)) {
+                        error = true;
+                    }
+                }
+
+                if (!error){
+                    try {
+                        const cant = parseInt(cantidad);
+                        if (cant < 1 || cant > 1000){
+                            error = true;
+                        }
+                    }catch (e){
+                        error = true;
+                    }
+                }
+                if (!error){
+                    if (new Date(fechaCaducidad) < new Date("2021-07-15")){
+                        error = true;
+                    }
+                }
+
+                if(error===true) {
+                    toret = false;
+                    showError("Es obligatorio cubrir todos los campos del formulario excepto la imagen");
+                }
+
+                return toret;
+            }
+        </script>
+    </head>
+    <header class="col-auto p-4">
+        <b class="usuario"><img height="40" width="40" src="images/usuario.png"> {{user}}</b>
+        <b class="salir"><a href="{{user_logout}}"><img height="40" width="40" src="images/salir.png"></a></b>
+    </header>
+    <body>
+        <h1  class="titulo" id="num" name="num" class="contador"><img height="40" width="40" src="images/farmacia.png"> {{farmacia.nombre}}: EDITANDO MEDICAMENTO </h1>
+        <form class="posicionFormularioBotones" id="medicamentosVolver" action="/editarMedicamentos" onSubmit="return validate();" method="post">
+            <input type="hidden" id="medicamentoFarmaciaActual2" name="medicamentoFarmaciaActual" size="60" value="{{farmacia.key.id()}}"/>
+            <input type="hidden" id="nombreMedicamentoActual2" name="nombreMedicamentoActual" size="60" value="{{medicamento.nombre}}"/>
+            <button class="botones" type="submit" id="volver" name="volver" value="Volver"><img height="40" width="40" src="images/volver.png"></button>
+        </form>
+        <div class="col-auto p-5">
+            <form id="medicamentosEdit" action="/editarMedicamentos" onSubmit="return validate();" method="post" enctype="multipart/form-data">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Nombre</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="nombre" name="nombre" size="30" placeholder="Inserte aquí el nombre" value="{{medicamento.nombre}}" required/></br></br>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Descripción</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="descripcion" name="descripcion" size="80" placeholder="Inserte aquí la descripción" value="{{medicamento.descripcion}}" required/></br></br>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Laboratorio</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="laboratorio" name="laboratorio" size="30" placeholder="Inserte aquí el laboratorio" value="{{medicamento.laboratorio}}" required/></br></br>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Proveedor</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="proveedor" name="proveedor" size="30" placeholder="Inserte aquí el proveedor" value="{{medicamento.proveedor}}" required/></br></br>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Cantidad</label>
+                    <div class="col-sm-10">
+                        <input type="number" id="cantidad" name="cantidad" min="1" max="1000" placeholder="Inserte aquí la cantidad" value="{{medicamento.cantidad}}" required/></br></br>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Fecha de caducidad</label>
+                    <div class="col-sm-10">
+                        <input type="date" id="fechaCaducidad" name="fechaCaducidad" min="2021-05-15" placeholder="Seleccione aquí la fecha de caducidad" value="{{medicamento.fechaCaducidad}}" required/></br></br>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Tipo de medicamento</label>
+                    <div class="col-sm-10">
+                        <select name="tipoMedicamento" id="tipoMedicamento" required>
+                            <option selected value="{{medicamento.tipoMedicamento}}">{{medicamento.tipoMedicamento}}</option>
+                            {% for tipoMedicamento in tiposMedicamentos %}
+                                <option value="{{tipoMedicamento}}">{{tipoMedicamento}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                </br></br>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Imagen</label>
+                    <div class="col-sm-10">
+                        <input type="file" id="img" name="img" size="90" placeholder="Inserte aquí la imagen"/></br></br>
+                    </div>
+                </div>
+                <input type="hidden" id="medicamentoFarmaciaActual" name="medicamentoFarmaciaActual" size="60" value="{{farmacia.key.id()}}"/>
+                <input type="hidden" id="nombreMedicamentoActual" name="nombreMedicamentoActual" size="60" value="{{medicamento.nombre}}"/>
+                <button class="botones" type="submit" id="enviar" name="enviar" value="Guardar"><img height="30" width="30" src="images/guardar.png"></button>
+            </form>
+        </div>
+        <div id="error" style="color:white;background-color:red;display:none"></div>
+    </body>
+</html>
